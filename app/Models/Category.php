@@ -4,15 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Products;
 use App\Traits\HasSlug;
 class Category extends Model
 {
     use HasFactory;
     use HasSlug;
-    protected $fillable=['title','slug','summary','photo','status','is_parent','parent_id','added_by'];
+    protected $fillable=['title','slug','summary','status','is_parent','parent_id','added_by'];
 
-    public function parent_info(){
-        return $this->hasOne('App\Models\Category','id','parent_id');
+    public function parent()
+    {
+        return $this->belongsTo(Category::class, 'parent_id');
     }
     public static function getAllCategory(){
         return  Category::orderBy('id','DESC')->with('parent_info')->paginate(10);
@@ -31,21 +33,33 @@ class Category extends Model
     public static function getAllParentWithChild(){
         return Category::with('child_cat')->where('is_parent',1)->where('status','active')->orderBy('title','ASC')->get();
     }
-    public function products(){
-        return $this->hasMany('App\Models\Product','cat_id','id')->where('status','active');
+    public function products()
+    {
+        return $this->hasMany(Products::class, 'cat_id', 'id')
+                    ->where('status', 'active')
+                    ->where('stock', '>', 0);
     }
-    public function sub_products(){
-        return $this->hasMany('App\Models\Product','child_cat_id','id')->where('status','active');
+
+    public function sub_products()
+    {
+        return $this->hasMany(Products::class, 'child_cat_id', 'id')
+                    ->where('status', 'active')
+                    ->where('stock', '>', 0);
     }
-    public static function getProductByCat($slug){
-        // dd($slug);
-        return Category::with('products')->where('slug',$slug)->first();
-        // return Product::where('cat_id',$id)->where('child_cat_id',null)->paginate(10);
+
+    public static function getProductByCat($slug)
+    {
+        return Category::with('products')->where('slug', $slug)->first();
     }
-    public static function getProductBySubCat($slug){
-        // return $slug;
-        return Category::with('sub_products')->where('slug',$slug)->first();
+
+    public static function getProductBySubCat($slug)
+    {
+        return Category::with('sub_products')->where('slug', $slug)->first();
     }
+    public function addedBy()
+{
+    return $this->belongsTo(User::class, 'added_by');
+}
     public static function countActiveCategory(){
         $data=Category::where('status','active')->count();
         if($data){

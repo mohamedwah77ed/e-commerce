@@ -5,139 +5,191 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\cart;
 use App\Models\Order;
-use App\Models\Shipping;
+use App\Services\Cart\UserCartService;
+use App\Services\Cart\GuestCartService;
 use Illuminate\Support\Str;
 
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-  public function index()
-{
-    $orders = Order::with('user')
-                   ->orderBy('created_at', 'desc')
-                   ->get();
-
-    return view('admin.orders.index', compact('orders'));
-}
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    // في الـ OrderController
-public function create()
-{
-    $cartItems = Cart::where('user_id', auth()->user()->id)
-                     ->where('order_id', null)
-                     ->get();
-
-    if($cartItems->isEmpty()){
-        session()->flash('error', 'السلة فاضية');
-        return redirect()->route('cart.index');
+    private function cartService()
+    {
+        return auth()->check()
+            ? new UserCartService()
+            : new GuestCartService();
     }
 
-    return view('order.index', compact('cartItems'));
-}
+    public function create()
+    {
+        $cartItems = $this->cartService()->getItems();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-   public function store(Request $request)
-{
-      //dd($request->all());
-    $validated = $request->validate([
-        'first_name' => 'required|string|max:255',
-        'last_name'  => 'required|string|max:255',
-        'address1'   => 'required|string|max:500',
-        'address2'   => 'nullable|string|max:500',
-        'country'    => 'required|string|max:100',
-        'phone'      => 'required|numeric|digits_between:10,15',
-        'post_code'  => 'nullable|string|max:20',
-        'email'      => 'required|email|max:255',
-        'coupon'     => 'nullable|numeric',
-        'shipping'   => 'nullable|exists:shippings,id',
-    ]);
-
-    $cartItems = Cart::where('user_id', auth()->user()->id)
-                     ->where('order_id', null)
-                     ->get();
-
-    if ($cartItems->isEmpty()) {
-        session()->flash('error', 'Cart is Empty!');
-        return back();
-    }
-
-    try {
-        $shippingPrice = 0;
-        $shipping      = null;
-        if ($request->filled('shipping')) {
-            $shipping      = Shipping::find($request->input('shipping'));
-            $shippingPrice = $shipping ? (float)$shipping->price : 0;
+        if ($cartItems->isEmpty()) {
+            session()->flash('error', 'السلة فاضية');
+            return redirect()->route('cart.index');
         }
 
-        $couponDiscount = session('coupon') ? (float)session('coupon')['value'] : 0;
-        $subTotal       = $cartItems->sum('amount');
-
-        $order               = new Order();
-        $order->order_number = 'ORD-' . strtoupper(Str::random(10));
-        $order->user_id      = auth()->user()->id;
-        $order->first_name   = $validated['first_name'];
-        $order->last_name    = $validated['last_name'];
-        $order->email        = $validated['email'];
-        $order->phone        = $validated['phone'];
-        $order->country      = $validated['country'];
-        $order->address1     = $validated['address1'];
-        $order->address2     = $validated['address2'] ?? null;
-        $order->post_code    = $validated['post_code'] ?? null;
-        $order->sub_total    = $subTotal;
-        $order->quantity     = $cartItems->sum('quantity');
-        $order->coupon       = $couponDiscount;
-        $order->shipping_id  = $shipping?->id;
-        $order->total_amount = $subTotal + $shippingPrice - $couponDiscount;
-        $order->status       = 'new';
-        $order->save();
-
-        // ✅ وجه للـ Paymob مع الأوردر
-        return redirect()->route('paymob.pay', $order->id);
-
-    } catch (\Exception $e) {
-         dd($e->getMessage());
-        session()->flash('error', 'Something went wrong.');
-        return back()->withInput();
-    }
-}
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        return view('frontend.checkout', compact('cartItems'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name'  => 'required|string|max:255',
+            'email'      => 'required|email|max:255',
+            'phone'      => 'required|numeric|digits_between:10,15',
+            'address1'   => 'required|string|max:500',
+            'address2'   => 'nullable|string|max:500',
+            'country'    => 'required|string|max:100',
+            'post_code'  => 'nullable|string|max:20',
+        ]);
+
+        $cartItems = $this->cartService()->getItems();
+
+        if ($cartItems->isEmpty()) {
+            session()->flash('error', 'السلة فاضية');
+            return back();
+        }
+
+        try {
+            $couponDiscount = session('coupon')
+                ? (float) session('coupon')['value']
+                : 0;
+
+            $subTotal = $cartItems->sum('amount');
+
+            $order = Order::create([
+                'order_number' => 'ORD-' . strtoupper(Str::random(10)),
+                'user_id'      => auth()->id() ?? null,
+                'session_id'   => auth()->check() ? null : session()->getId(),
+                'first_name'   => $validated['first_name'],
+                'last_name'    => $validated['last_name'],
+                'email'        => $validated['email'],
+                'phone'        => $validated['phone'],
+                'country'      => $validated['country'],
+                'address1'     => $validated['address1'],
+                'address2'     => $validated['address2'] ?? null,
+                'post_code'    => $validated['post_code'] ?? null,
+                'sub_total'    => $subTotal,
+                'quantity'     => $cartItems->sum('quantity'),
+                'coupon'       => $couponDiscount,
+                'total_amount' => $subTotal - $couponDiscount,
+                'status'       => 'new',
+            ]);
+
+            $this->cartService()->clear($order->id);
+
+            return redirect()->route('paymob.pay', $order->id);
+
+        } catch (\Exception $e) {
+            session()->flash('error', 'حدث خطأ، حاول مرة أخرى');
+            return back()->withInput();
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function myOrders()
     {
-        //
+        $orders = $this->getUserOrders();
+
+        return view('frontend.orders_index', compact('orders'));
+    }
+    public function show($id)
+    {
+        $order = $this->getOrderById($id);
+
+        if (!$order) {
+            abort(404, 'الطلب غير موجود');
+        }
+
+        return view('frontend.orders_show', compact('order'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function success($id)
     {
-        //
+        $order = $this->getOrderById($id);
+
+        if (!$order) {
+            abort(404, 'الطلب غير موجود');
+        }
+
+        return view('frontend.orders.success', compact('order'));
+    }
+
+    public function cancel(Request $request, $id)
+    {
+        $order = $this->getOrderById($id);
+
+        if (!$order) {
+            return back()->with('error', 'الطلب غير موجود');
+        }
+
+        if (!$this->isOrderOwner($order)) {
+            abort(403, 'Unauthorized');
+        }
+
+        $cancellableStatuses = ['new', 'pending', 'processing'];
+
+        if (!in_array($order->status, $cancellableStatuses)) {
+            return back()->with('error', 'لا يمكن إلغاء هذا الطلب في حالته الحالية');
+        }
+
+        $order->update([
+            'status'              => 'cancelled',
+            'cancelled_at'        => now(),
+            'cancellation_reason' => $request->input('reason'),
+        ]);
+
+        return back()->with('success', 'تم إلغاء الطلب بنجاح');
+    }
+
+    public function destroy($id)
+    {
+        Order::findOrFail($id)->delete();
+
+        // ✅ تصحيح اسم الـ route من orders.index إلى orders.my
+        return redirect()->route('orders.my')->with('success', 'تم حذف الطلب');
+    }
+
+    // ─── Private Helpers ─────────────────────────────────────────
+
+    private function getUserOrders()
+    {
+        if (auth()->check()) {
+            return Order::where('user_id', auth()->id())
+                ->with('cart_info.product')
+                ->latest()
+                ->paginate(10);
+        }
+
+        return Order::where('session_id', session()->getId())
+            ->whereNull('user_id')
+            ->with('cart_info.product')
+            ->latest()
+            ->paginate(10);
+    }
+
+    private function getOrderById($id)
+    {
+        if (auth()->check()) {
+            return Order::where('id', $id)
+                ->where('user_id', auth()->id())
+                ->with('cart_info.product')
+                ->first();
+        }
+
+        return Order::where('id', $id)
+            ->where('session_id', session()->getId())
+            ->whereNull('user_id')
+            ->with('cart_info.product')
+            ->first();
+    }
+
+    private function isOrderOwner($order)
+    {
+        if (auth()->check()) {
+            return $order->user_id === auth()->id();
+        }
+
+        return $order->session_id === session()->getId() && is_null($order->user_id);
     }
 }

@@ -71,41 +71,29 @@ class PaymobController extends Controller
         return redirect('https://accept.paymob.com/api/acceptance/iframes/' . $iframeId . '?payment_token=' . $paymentToken);
     }
 
-    
+
     public function callback(Request $request)
 {
-     // dd($request->all());
     $data = $request->all();
-   // dd($data['order'], Order::where('id', $data['order'])->first());
 
-    // تحقق إن الدفع نجح
-    if($data['success'] == 'true'){
+    if (($data['success'] ?? '') == 'true') {
 
-        // جيب الـ Order عن طريق الـ merchant_order_id
         $order = Order::where('paymob_order_id', $data['order'])->first();
 
-
-        if($order){
-            // حدث الـ Order
+        if ($order) {
             $order->payment_status = 'paid';
-            $order->status         = 'process';
+            $order->payment_method = 'paymob';
+            $order->status         = 'processing';
             $order->save();
 
-            // ربط الـ Cart بالـ Order
-            Cart::where('user_id', $order->user_id)
-                ->where('order_id', null)
-                ->update(['order_id' => $order->id]);
-
-            // امسح الـ Session
             session()->forget(['cart', 'coupon']);
 
-            return redirect()->route('products.index')
+            return redirect()->route('orders.my', $order->id)
                              ->with('success', 'تم الدفع بنجاح');
         }
     }
 
-    // لو الدفع فشل
     return redirect()->route('cart.index')
-                     ->with('error', 'فشل الدفع حاول تاني');
+                     ->with('error', 'فشل الدفع، حاول تاني');
 }
 }

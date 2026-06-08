@@ -1,27 +1,58 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
+@extends('layouts.main')
+
+@section('content')
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-5 col-lg-4">
+
+        <div class="card auth-card">
+            <div class="card-body">
+
+                <div class="auth-header">
+                    <i class="bi bi-shield-check fs-1 text-primary mb-2"></i>
+                    <h3>{{ trans_lang('تأكيد كلمة المرور', 'Confirm Password') }}</h3>
+                    <p>{{ trans_lang('يرجى التحقق من هويتك', 'Please verify your identity') }}</p>
+                </div>
+
+                <div class="alert alert-info d-flex align-items-center" role="alert">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <div>{{ trans_lang('هذه منطقة آمنة. يرجى تأكيد كلمة المرور قبل المتابعة.', 'This is a secure area. Please confirm your password before continuing.') }}</div>
+                </div>
+
+                @if($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @foreach($errors->all() as $error)
+                            <p class="mb-0">{{ $error }}</p>
+                        @endforeach
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('password.confirm') }}">
+                    @csrf
+
+                    <div class="mb-4">
+                        <label for="password" class="form-label">{{ trans_lang('كلمة المرور', 'Password') }}</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="bi bi-lock text-muted"></i>
+                            </span>
+                            <input type="password" class="form-control border-start-0 @error('password') is-invalid @enderror" id="password" name="password" required autocomplete="current-password">
+                            @error('password')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-2"></i>{{ trans_lang('تأكيد', 'Confirm') }}
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
     </div>
-
-    <form method="POST" action="{{ route('password.confirm') }}">
-        @csrf
-
-        <!-- Password -->
-        <div>
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <div class="flex justify-end mt-4">
-            <x-primary-button>
-                {{ __('Confirm') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+</div>
+@endsection

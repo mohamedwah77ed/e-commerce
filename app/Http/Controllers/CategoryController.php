@@ -14,17 +14,18 @@ class CategoryController extends Controller
      */
     public function index()
     {
-       $categories = Category::all();
-       return view('categories.index', compact('categories'));
+       $categories = Category::with(['parent', 'addedBy'])->get();
+       return view('backend.categories.index', compact('categories'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-          return view('categories.create');
-     }
+{
+    $parents = Category::where('is_parent', 1)->where('status', 'active')->get();
+    return view('backend.categories.create', compact('parents'));
+}
 
     /**
      * Store a newly created resource in storage.
@@ -35,13 +36,12 @@ public function store(Request $request)
     $validatedData = $request->validate([
         'title'     => 'required|string',
         'summary'   => 'nullable|string',
-        'photo'     => 'nullable|string',
         'status'    => 'required|in:active,inactive',
         'is_parent' => 'nullable|boolean',
         'parent_id' => 'nullable|exists:categories,id',
     ]);
 
-   
+
     $slug = Str::slug($request->title);
 
 $latestSlug = Category::where('slug', 'like', $slug . '%')
@@ -80,12 +80,12 @@ if ($latestSlug) {
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
-        $category = Category::findOrFail($id);
-        return view('categories.edit', compact('category'));    
-    
-    }
+   public function edit(string $id)
+{
+    $category = Category::findOrFail($id);
+    $parents = Category::where('is_parent', 1)->where('status', 'active')->where('id', '!=', $id)->get();
+    return view('backend.categories.edit', compact('category', 'parents'));
+}
 
     /**
      * Update the specified resource in storage.
@@ -103,7 +103,6 @@ if ($latestSlug) {
         'parent_id' => 'nullable|exists:categories,id',
     ]);
 
-    // ✅ لو الـ title اتغير بس يعمل slug جديد
     if ($category->title !== $request->title) {
         $slug = Str::slug($request->title);
         $original = $slug;
@@ -154,4 +153,5 @@ if ($latestSlug) {
             $message
         );
     }
+
 }

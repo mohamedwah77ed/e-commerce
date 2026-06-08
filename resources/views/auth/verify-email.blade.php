@@ -1,31 +1,50 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
-    </div>
+@extends('layouts.main')
 
-    @if (session('status') == 'verification-link-sent')
-        <div class="mb-4 font-medium text-sm text-green-600">
-            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
-        </div>
-    @endif
+@section('content')
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-5 col-lg-4">
 
-    <div class="mt-4 flex items-center justify-between">
-        <form method="POST" action="{{ route('verification.send') }}">
-            @csrf
+        <div class="card auth-card">
+            <div class="card-body">
 
-            <div>
-                <x-primary-button>
-                    {{ __('Resend Verification Email') }}
-                </x-primary-button>
+                <div class="auth-header">
+                    <i class="bi bi-envelope-check fs-1 text-primary mb-2"></i>
+                    <h3>{{ trans_lang('تفعيل البريد الإلكتروني', 'Verify Email') }}</h3>
+                    <p>{{ trans_lang('خطوة أخيرة', 'One more step to go') }}</p>
+                </div>
+
+                <div class="alert alert-info d-flex align-items-center" role="alert">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <div>{{ trans_lang('شكراً للتسجيل! يرجى تفعيل بريدك الإلكتروني بالضغط على الرابط المرسل.', 'Thanks for signing up! Please verify your email by clicking the link we sent you.') }}</div>
+                </div>
+
+                @if (session('status') == 'verification-link-sent')
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        {{ trans_lang('تم إرسال رابط تفعيل جديد إلى بريدك الإلكتروني.', 'A new verification link has been sent to your email.') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                <div class="d-grid gap-3">
+                    <form method="POST" action="{{ route('verification.send') }}">
+                        @csrf
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-send me-2"></i>{{ trans_lang('إعادة إرسال رابط التفعيل', 'Resend Verification Email') }}
+                        </button>
+                    </form>
+
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-secondary w-100">
+                            <i class="bi bi-box-arrow-right me-2"></i>{{ trans_lang('تسجيل الخروج', 'Log Out') }}
+                        </button>
+                    </form>
+                </div>
+
             </div>
-        </form>
+        </div>
 
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-
-            <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                {{ __('Log Out') }}
-            </button>
-        </form>
     </div>
-</x-guest-layout>
+</div>
+@endsection
