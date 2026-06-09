@@ -87,6 +87,59 @@ PAYMOB_HMAC=your_hmac_secret
 PAYMOB_BASE_URL=https://accept.paymob.com
 ```
 
+```
+┌─────────────────────┐
+│      USERS          │ (id)
+├─────────────────────┤
+│ - id (PK)           │
+│ - name              │
+│ - email             │
+│ - role              │
+│ - password          │
+└──────────┬──────────┘
+           │ (1:N)
+           ├──────────────────┬──────────────────┬──────────────────┐
+           ↓                  ↓                  ↓                  ↓
+    ┌─────────────┐   ┌──────────────┐  ┌────────────────┐  ┌───────────────┐
+    │   ORDERS    │   │ CART_ITEMS   │  │  WISHLIST      │  │  CATEGORIES   │
+    ├─────────────┤   ├──────────────┤  ├────────────────┤  ├───────────────┤
+    │ - id (PK)   │   │ - id (PK)    │  │ - id (PK)      │  │ - id (PK)     │
+    │ - user_id   │   │ - user_id    │  │ - user_id      │  │ - added_by    │
+    │ - order_#   │   │ - product_id │  │ - product_id   │  │ (added_by fk) │
+    │ - status    │   │ - order_id   │  │ - created_at   │  │ - parent_id   │
+    │ - total     │   │ - quantity   │  └────────────────┘  │ (self-ref)    │
+    └────┬────────┘   └──┬───────────┘                       └───────────────┘
+         │ (1:N)         │ (M:1)
+         └────────┬──────┘
+                  ↓
+         ┌──────────────┐
+         │  PRODUCTS    │ (id)
+         ├──────────────┤
+         │ - id (PK)    │
+         │ - cat_id (FK)│
+         │ - brand_id   │
+         │ - price      │
+         │ - discount   │
+         │ - stock      │
+         └────┬─┬───┬──┘
+              │ │   │ (1:N)
+         (M:1)│ │   └──────────┬──────────────┐
+              │ │              ↓              ↓
+              │ └────────┐  ┌─────────────┐  ┌──────────────┐
+              │          ↓  │ CATEGORIES  │  │ PRODUCT_IMG  │
+              │    ┌──────────────┐       │  ├──────────────┤
+              │    │   BRANDS     │       │  │ - id (PK)    │
+              │    ├──────────────┤       │  │ - product_id │
+              │    │ - id (PK)    │       │  │ - image      │
+              │    │ - title      │       │  └──────────────┘
+              │    │ - slug       │       │
+              └────│ - status     │       │
+                   └──────────────┘       │
+                                        └─ (M:1 FK)
+```
+
+---
+
 ---
 
 ## 🗂️ Project Structure
