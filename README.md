@@ -1,4 +1,4 @@
-# 🛒 Dubai Phone — Laravel E-Commerce Store
+# 🛒 Laravel E-Commerce Store
 
 A full-featured e-commerce platform built with Laravel, designed for electronics retail (phones, laptops, tablets, accessories, and more).
 
@@ -45,7 +45,7 @@ A full-featured e-commerce platform built with Laravel, designed for electronics
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-username/dubai-phone.git
+git clone (https://github.com/mohamedwah77ed/e-commerce)
 cd dubai-phone
 
 # 2. Install dependencies
