@@ -258,7 +258,7 @@
 
             <a href="{{ route('products.home') }}" class="logo">
                 <i class="fas fa-store"></i>
-                {{ trans_lang('متجرنا', 'Our Store') }}
+                {{ trans_lang('2D', '2D') }}
             </a>
 
             <div class="d-flex align-items-center gap-3">

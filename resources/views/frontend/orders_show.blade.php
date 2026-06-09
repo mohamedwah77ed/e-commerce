@@ -27,8 +27,8 @@
                     @foreach($order->cart_info as $item)
                         <div class="d-flex align-items-center mb-3 pb-3 {{ !$loop->last ? 'border-bottom' : '' }}">
                             <div class="flex-shrink-0">
-                                <img src="{{ $item->product->photo ?? asset('images/default.png') }}"
-                                     alt="" class="rounded-3" width="80" height="80" style="object-fit: cover;">
+                                <img src="{{ $item->product->photo ? asset('uploads/' . $item->product->photo) : asset('uploads/default.png') }}"
+                                        alt="" class="rounded-3" width="80" height="80" style="object-fit: cover;">
                             </div>
                             <div class="ms-3 flex-grow-1">
                                 <h6 class="mb-1 fw-semibold">{{ $item->product->title ?? trans_lang('منتج', 'Product') }}</h6>

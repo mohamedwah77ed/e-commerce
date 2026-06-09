@@ -78,7 +78,7 @@ Route::prefix('admin')
         Route::resource('users', UsersController::class);
 
         Route::post('users/{id}/restore', [UsersController::class, 'restore'])->name('users.restore');
-        Route::resource('products', Admin\ProductController::class)->except(['show']);
+        Route::resource('products', ProductController::class)->except(['show']);
          Route::get('products/{slug}', [ProductController::class, 'show'])->name('products.show');
 
        Route::delete('product/image/{id}', [ProductController::class, 'deleteImage'])->name('product.image.delete');

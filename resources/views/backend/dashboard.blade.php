@@ -2,9 +2,7 @@
 
 @section('title', trans_lang('الرئيسية', 'Dashboard'))
 
-@section('breadcrumb')
-    <li class="breadcrumb-item active" aria-current="page">{{ trans_lang('الرئيسية', 'Dashboard') }}</li>
-@endsection
+
 
 @section('content')
     {{-- Statistics Cards --}}
