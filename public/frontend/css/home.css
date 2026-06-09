@@ -1,0 +1,697 @@
+
+
+:root {
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --bg: #0a0e1a;
+    --surface: #141c2e;
+    --surface2: #1a2332;
+    --border: rgba(255,255,255,.08);
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --green: #10b981;
+    --red: #ef4444;
+}
+
+
+        /* ═══════════════════════════════════════
+           DUBAI PHONE STYLE OVERRIDES
+        ═══════════════════════════════════════ */
+
+        /* Hero Carousel */
+        .dp-hero-carousel {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            margin-bottom: 1rem;
+        }
+        .dp-hero-slide {
+            display: none;
+            animation: fadeIn .5s ease;
+        }
+        .dp-hero-slide.active {
+            display: block;
+        }
+        .dp-hero-slide img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+        .hero-desk { display: block; }
+        .hero-mobile { display: none; }
+        @media (max-width: 768px) {
+            .hero-desk { display: none; }
+            .hero-mobile { display: block; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Carousel dots */
+        .dp-carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .dp-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.3);
+            border: none;
+            cursor: pointer;
+            transition: all .3s;
+        }
+        .dp-dot.active {
+            background: var(--accent);
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        /* Trust Badges Bar */
+        .dp-trust-bar {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .dp-trust-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .3rem;
+            text-align: center;
+        }
+        .dp-trust-item i {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+        .dp-trust-item span {
+            font-size: .75rem;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        /* Category Section */
+        .nf-hero-categories {
+            background: var(--bg);
+            padding: 1rem 0;
+            margin-bottom: 1.5rem;
+        }
+        .nf-section-h2 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+        .nf-section-h2::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(180deg, var(--accent), var(--accent2));
+            border-radius: 4px;
+        }
+        .nf-hero-categories__track {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: .5rem;
+            scrollbar-width: none;
+        }
+        .nf-hero-categories__track::-webkit-scrollbar { display: none; }
+        .nf-hero-cat-cell {
+            min-width: 80px;
+            text-align: center;
+        }
+        .nf-hero-cat-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .5rem;
+            text-decoration: none;
+            transition: transform .2s;
+        }
+        .nf-hero-cat-link:hover {
+            transform: translateY(-4px);
+        }
+        .nf-hero-cat-link .cat-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--accent);
+            transition: all .3s;
+        }
+        .nf-hero-cat-link:hover .cat-icon {
+            background: rgba(0,212,255,.1);
+            border-color: rgba(0,212,255,.3);
+        }
+        .nf-hero-cat-link span {
+            font-size: .75rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        /* Product Tabs */
+        .nf-product-section {
+            margin-bottom: 2rem;
+        }
+        .nf-tabs-scroll {
+            display: flex;
+            gap: .5rem;
+            overflow-x: auto;
+            padding-bottom: .5rem;
+            margin-bottom: 1rem;
+            scrollbar-width: none;
+        }
+        .nf-tabs-scroll::-webkit-scrollbar { display: none; }
+        .nf-tab {
+            flex-shrink: 0;
+            padding: .5rem 1.2rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--muted);
+            font-size: .85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .3s;
+            font-family: 'Cairo', sans-serif;
+            white-space: nowrap;
+        }
+        .nf-tab:hover {
+            border-color: rgba(0,212,255,.3);
+            color: var(--accent);
+        }
+        .nf-tab.nf-tab--active {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-color: transparent;
+            color: #000;
+            font-weight: 700;
+        }
+
+        /* Product Carousel */
+        .nf-product-carousel {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: .5rem;
+            scrollbar-width: none;
+        }
+        .nf-product-carousel::-webkit-scrollbar { display: none; }
+
+        /* Horizontal product card (for carousel) */
+        .nf-prod-card-h {
+            min-width: 170px;
+            width: 170px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all .3s;
+        }
+        .nf-prod-card-h:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0,212,255,.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,.3);
+        }
+        .nf-prod-card-h .nf-prod-img {
+            position: relative;
+            height: 160px;
+            background: var(--surface2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: .5rem;
+        }
+        .nf-prod-card-h .nf-prod-img img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .nf-prod-card-h .nf-prod-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: var(--red);
+            color: #fff;
+            font-size: .65rem;
+            font-weight: 700;
+            padding: .15rem .4rem;
+            border-radius: 4px;
+        }
+        .nf-prod-card-h .nf-prod-body {
+            padding: .75rem;
+        }
+        .nf-prod-card-h .nf-prod-title {
+            font-size: .8rem;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: .5rem;
+            height: 2.2rem;
+        }
+        .nf-prod-card-h .nf-prod-price {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+        .nf-prod-card-h .nf-price-current {
+            font-size: 1rem;
+            font-weight: 900;
+            color: var(--green);
+        }
+        .nf-prod-card-h .nf-price-old {
+            font-size: .75rem;
+            color: var(--muted);
+            text-decoration: line-through;
+        }
+
+        /* Brand Section */
+        .nf-brands__track {
+            display: flex;
+            gap: .75rem;
+            overflow-x: auto;
+            padding-bottom: .5rem;
+            scrollbar-width: none;
+        }
+        .nf-brands__track::-webkit-scrollbar { display: none; }
+        .nf-brand-cell {
+            flex-shrink: 0;
+        }
+        .nf-brand-tile {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100px;
+            height: 50px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: .5rem;
+            text-decoration: none;
+            transition: all .3s;
+        }
+        .nf-brand-tile:hover {
+            border-color: rgba(0,212,255,.3);
+            background: rgba(0,212,255,.05);
+        }
+        .nf-brand-tile span {
+            font-size: .85rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        /* Promo Banner */
+        .nf-promo-banner {
+            display: block;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .nf-promo-banner img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        /* Scroll Progress */
+        .nf-scroll-progress-wrap {
+            display: flex;
+            justify-content: center;
+            margin-top: .5rem;
+        }
+        .nf-scroll-progress-track {
+            width: 80px;
+            height: 4px;
+            background: var(--surface);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .nf-scroll-progress-thumb {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 20%;
+            background: var(--accent);
+            border-radius: 4px;
+            transition: left .3s;
+        }
+
+        /* View All Link */
+        .nf-view-all {
+            font-size: .85rem;
+            color: var(--accent);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: .3rem;
+            font-weight: 600;
+        }
+        .nf-view-all:hover {
+            color: #fff;
+        }
+
+
+
+
+/* ============================================
+   PRODUCT CARD - Dark Theme (يناسب الصفحة)
+   ============================================ */
+
+.nf-product-card {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    width: 163px;
+    height: auto;
+    overflow: hidden;
+    border-radius: 8px;
+    border: 1px solid var(--border);  /* حدود شفافة */
+    background: var(--surface);        /* خلفية داكنة */
+    transition: box-shadow 0.2s ease;
+}
+
+.nf-product-card:hover {
+    box-shadow: 0 4px 16px rgba(0,212,255,.1);
+}
+
+@media (min-width: 768px) {
+    .nf-product-card {
+        width: 256px;
+        border-radius: 10px;
+    }
+}
+
+/* ============================================
+   IMAGE WRAPPER
+   ============================================ */
+
+.nf-product-img-wrap {
+    display: flex;
+    height: 125px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--surface2);  /* داكن */
+}
+
+@media (min-width: 768px) {
+    .nf-product-img-wrap {
+        height: 210px;
+    }
+}
+
+.nf-product-img-link {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.nf-product-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.nf-product-card:hover .nf-product-img-wrap img {
+    transform: scale(1.05);
+}
+
+/* ============================================
+   PRODUCT BODY (Dark bg)
+   ============================================ */
+
+.nf-product-body {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 10px;
+    background: var(--surface);  /* داكن */
+    padding: 8px;
+}
+
+@media (min-width: 768px) {
+    .nf-product-body {
+        padding: 10px;
+    }
+}
+
+/* ============================================
+   TITLE
+   ============================================ */
+
+.nf-product-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    text-align: start;
+    font-size: 11px;
+    line-height: 18px;
+    color: var(--text);  /* أبيض مائل للرمادي */
+    text-decoration: none;
+    font-weight: 400;
+}
+
+.nf-product-title:hover {
+    color: var(--accent);  /* أزرق سماوي */
+}
+
+@media (min-width: 768px) {
+    .nf-product-title {
+        font-size: 14px;
+        line-height: 20px;
+    }
+}
+
+/* ============================================
+   PRICE ROW
+   ============================================ */
+
+.nf-product-price-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: flex-start;
+    column-gap: 6px;
+    row-gap: 2px;
+}
+
+.nf-product-price {
+    text-align: start;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 20px;
+    color: var(--green);  /* أخضر */
+}
+
+.nf-product-currency {
+    text-align: start;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--green);
+}
+
+@media (min-width: 768px) {
+    .nf-product-price {
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    .nf-product-currency {
+        font-size: 14px;
+        line-height: 22px;
+    }
+}
+
+/* ============================================
+   MORPH OFFERS
+   ============================================ */
+
+.nf-morph-container {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    min-height: 22px;
+    overflow: hidden;
+}
+
+.nf-morph-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.nf-morph-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.nf-morph-text {
+    font-size: 11px;
+    color: var(--muted);  /* رمادي */
+    white-space: nowrap;
+    padding-left: 4px;
+}
+
+[dir="rtl"] .nf-morph-text {
+    padding-left: 0;
+    padding-right: 4px;
+}
+
+/* Animation states */
+.nf-morph-item {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: translateY(14px);
+}
+
+.nf-morph-item.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.nf-morph-item.exit {
+    opacity: 0;
+    transform: translateY(-14px);
+}
+
+/* ============================================
+   SCROLL PROGRESS
+   ============================================ */
+
+.nf-scroll-progress-wrap {
+    margin-top: 12px;
+    padding: 0 16px;
+}
+
+.nf-scroll-progress-track {
+    height: 3px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.nf-scroll-progress-thumb {
+    height: 100%;
+    background: #E02954;
+    border-radius: 3px;
+    transition: width 0.1s linear;
+    width: 20%;
+}
+
+/* ============================================
+   SECTION HEADERS - أبيض على خلفية داكنة
+   ============================================ */
+
+.nf-section-h2 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #ffffff !important;  /* ← أبيض صريح */
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+/* الخط اللي قبل العنوان */
+.nf-section-h2::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(180deg, var(--accent), var(--accent2));
+    border-radius: 4px;
+}
+
+/* "عرض الكل" - يبقى أزرق سماوي */
+.nf-view-all {
+    font-size: .85rem;
+    color: var(--accent) !important;  /* ← أزرق سماوي */
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: .3rem;
+    font-weight: 600;
+}
+
+.nf-view-all:hover {
+    color: #ffffff !important;  /* ← أبيض لما hover */
+}
+
+/* الأيقونة الصغيرة في "عرض الكل" */
+.nf-view-all i {
+    color: var(--accent) !important;
+}
+
+.nf-view-all:hover i {
+    color: #ffffff !important;
+}
+/* ============================================
+   BRAND TILES - ألوان البراندات
+   ============================================ */
+
+.nf-brand-tile span {
+    font-size: .85rem;
+    font-weight: 700;
+    color: #ffffff !important;  /* ← أبيض */
+    text-shadow: 0 1px 2px rgba(0,0,0,.3);  /* ← ظل خفيف للقراءة */
+}
+
+/* لو البراند لونه فاتح (زي Apple) */
+.nf-brand-tile span[style*="fff"],
+.nf-brand-tile span[style*="ffffff"] {
+    color: #ffffff !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,.5);
+}
+/* ============================================
+   TRUST BAR - النصوص تبقى بيضاء
+   ============================================ */
+
+.dp-trust-item span {
+    font-size: .75rem;
+    color: #e2e8f0 !important;  /* ← أبيض مائل للرمادي */
+    font-weight: 600;
+}
+
+.dp-trust-item i {
+    font-size: 1.5rem;
+    color: var(--accent);  /* ← أزرق سماوي */
+}

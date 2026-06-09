@@ -61,12 +61,11 @@ class CartController extends Controller
             'total' => $items->sum('amount'),
         ]);
     }
+
     public function buyNow(Request $request)
 {
-    // نفس منطق add-to-cart
     $this->addToCart($request);
 
-    // روح للـ Checkout
     return redirect()->route('checkout');
 }
 public function getCount()

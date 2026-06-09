@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use App\Services\Cart\GuestCartService;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -29,7 +30,15 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-       return redirect()->intended('/products');
+        $user = Auth::user();
+
+        (new GuestCartService())->mergeInto($user->id);
+
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
+        return redirect()->route('products.home');
     }
 
     /**

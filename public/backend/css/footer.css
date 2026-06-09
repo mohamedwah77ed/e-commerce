@@ -1,0 +1,31 @@
+/* ============================================
+   Backend Footer Specific Styles
+   ============================================ */
+
+.footer {
+    background-color: #fff;
+}
+
+.footer .list-inline-item a {
+    transition: color 0.2s;
+}
+
+.footer .list-inline-item a:hover {
+    color: var(--primary-color) !important;
+}
+
+.footer small {
+    line-height: 1.5;
+}
+
+/* Mobile Footer */
+@media (max-width: 767.98px) {
+    .footer {
+        text-align: center;
+    }
+    
+    .footer .list-inline-item {
+        display: block;
+        margin: 0.25rem 0 !important;
+    }
+}

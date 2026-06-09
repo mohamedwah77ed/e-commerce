@@ -33,6 +33,7 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
+
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name'  => 'required|string|max:255',
@@ -81,10 +82,9 @@ class OrderController extends Controller
 
             return redirect()->route('paymob.pay', $order->id);
 
-        } catch (\Exception $e) {
-            session()->flash('error', 'حدث خطأ، حاول مرة أخرى');
-            return back()->withInput();
-        }
+        }  catch (\Exception $e) {
+    dd($e->getMessage()); // ← بدل session()->flash
+}
     }
 
     public function myOrders()

@@ -2,9 +2,6 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymobController;
@@ -14,7 +11,9 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
-
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\BrandController;
 
 // ── Frontend ──────────────────────────
 Route::controller(FrontendController::class)->group(function() {
@@ -79,7 +78,7 @@ Route::prefix('admin')
         Route::resource('users', UsersController::class);
 
         Route::post('users/{id}/restore', [UsersController::class, 'restore'])->name('users.restore');
-        Route::resource('products', ProductController::class)->except(['show']);
+        Route::resource('products', Admin\ProductController::class)->except(['show']);
          Route::get('products/{slug}', [ProductController::class, 'show'])->name('products.show');
 
        Route::delete('product/image/{id}', [ProductController::class, 'deleteImage'])->name('product.image.delete');

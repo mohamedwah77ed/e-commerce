@@ -33,11 +33,16 @@ return new class extends Migration
             $table->string('post_code')->nullable();
             $table->text('address1');
             $table->text('address2')->nullable();
+            $table->string('session_id')->nullable()->after('user_id');
+            $table->string('paymob_order_id')->nullable()->after('session_id');
+            $table->string('transaction_id')->nullable()->after('paymob_order_id');
+            $table->timestamp('cancelled_at')->nullable()->after('updated_at');
+            $table->string('cancellation_reason')->nullable()->after('cancelled_at');
             $table->timestamps();
-        
+
         });
     }
-    
+
 
     /**
      * Reverse the migrations.

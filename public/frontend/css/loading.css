@@ -1,0 +1,87 @@
+/* ════════════════════════════════
+   SKELETON LOADING
+   ════════════════════════════════ */
+.skeleton {
+    background: linear-gradient(90deg, var(--surface2) 25%, var(--surface) 50%, var(--surface2) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-wave 1.5s infinite;
+    border-radius: 8px;
+}
+@keyframes skeleton-wave {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+.skeleton-img { height: 200px; width: 100%; }
+.skeleton-title { height: 20px; width: 80%; margin: 10px 0; }
+.skeleton-price { height: 16px; width: 50%; }
+.skeleton-btn { height: 40px; width: 100%; margin-top: 10px; }
+
+/* Hide content until loaded */
+.content-loading { opacity: 0; transition: opacity .3s; }
+.content-loaded { opacity: 1; }
+
+/* ════════════════════════════════
+   TOAST STYLES
+   ════════════════════════════════ */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: .9rem;
+    font-weight: 600;
+    transform: translateX(-120%);
+    transition: transform .4s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 10px 40px rgba(0,0,0,.4);
+    min-width: 280px;
+}
+.toast.show { transform: translateX(0); }
+.toast i { font-size: 1.1rem; }
+.toast-success { border-color: rgba(16,185,129,.3); }
+.toast-success i { color: var(--green); }
+.toast-error { border-color: rgba(239,68,68,.3); }
+.toast-error i { color: var(--red); }
+.toast-warning { border-color: rgba(245,158,11,.3); }
+.toast-warning i { color: var(--gold); }
+
+/* ════════════════════════════════
+   SCROLL PROGRESS
+   ════════════════════════════════ */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    z-index: 10000;
+    transition: width .1s;
+}
+/* ════════════════════════════════
+   CUSTOM CURSOR GLOW
+   ════════════════════════════════ */
+@media (hover: hover) and (pointer: fine) {
+    .cursor-glow {
+        position: fixed;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(0,212,255,.08) 0%, transparent 70%);
+        pointer-events: none;
+        z-index: 9998;
+        transform: translate(-50%, -50%);
+        transition: opacity .3s;
+    }
+}
