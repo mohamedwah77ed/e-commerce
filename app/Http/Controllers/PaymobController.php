@@ -142,7 +142,8 @@ class PaymobController extends Controller
 
         session()->forget(['cart', 'coupon']);
 
-        return redirect()->route('orders.my', $order->id)->with('success', 'تم الدفع بنجاح 🎉');
+       return redirect()->route('order.success', $order->id)->with('success', 'تم الدفع بنجاح ');
+
     }
 
     // ─────────────────────────────────────────

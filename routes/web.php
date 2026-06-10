@@ -60,7 +60,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // ── Payment ───────────────────────────
-Route::get('pay/{order}',      [PaymobController::class, 'pay'])->name('paymob.pay')->middleware('auth');
+Route::get('pay/{order}', [PaymobController::class, 'pay']) ->name('paymob.pay');
 Route::match(['get', 'post'], 'paymob/callback', [PaymobController::class, 'callback'])->name('paymob.callback');
 
 // ── Language ──────────────────────────

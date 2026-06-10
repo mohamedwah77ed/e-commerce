@@ -9,11 +9,11 @@ use Illuminate\Support\Collection;
 class UserCartService implements CartServiceInterface
 {
     public function getItems(): Collection
-    {
-        return Cart::where('user_id', auth()->id())
-            ->with('product')
-            ->get();
-    }
+{
+    return Cart::where('user_id', auth()->id())
+        ->with('product.images')
+        ->get();
+}
 
     public function add(Products $product): array
     {

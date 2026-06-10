@@ -77,6 +77,8 @@ class OrderController extends Controller
                 'total_amount' => $subTotal - $couponDiscount,
                 'status'       => 'new',
             ]);
+            session()->put('last_order_id', $order->id);
+
 
             $this->cartService()->clear($order->id);
 
@@ -105,15 +107,18 @@ class OrderController extends Controller
     }
 
     public function success($id)
-    {
-        $order = $this->getOrderById($id);
+{
+    $order = Order::with('cart_info.product')->find($id);
 
-        if (!$order) {
-            abort(404, 'الطلب غير موجود');
-        }
-
-        return view('frontend.orders.success', compact('order'));
+    if (!$order) {
+        abort(404);
     }
+
+    // امسح الـ session بعد ما يشوف الصفحة
+    session()->forget('last_order_id');
+
+    return view('frontend.success', compact('order'));
+}
 
     public function cancel(Request $request, $id)
     {

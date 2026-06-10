@@ -27,18 +27,14 @@
 
             {{-- ════════ CART ITEMS ════════ --}}
             <div class="col-lg-8">
-                <div class="cart-items-card">
-                    <div class="card-head">
-                        <span><i class="fas fa-box-open me-2"></i>{{ trans_lang('المنتجات', 'Products') }}</span>
-                        <span class="items-count">{{ $products->count() }} {{ trans_lang('صنف', 'Items') }}</span>
-                    </div>
-
-                    <div class="cart-items-list">
-                        @foreach($products as $item)
+                <div class="cart-items-list">
+                    @foreach($products as $item)
                         <div class="cart-item">
+
                             {{-- Product Image --}}
                             <div class="item-img">
-                                <img src="{{ $item->product->image ? asset('storage/' . $item->product->image) : asset('images/no-image.png') }}"
+                                @php $firstImage = $item->product->images->first() @endphp
+                                <img src="{{ $firstImage ? asset('uploads/' . $firstImage->image) : asset('images/no-image.png') }}"
                                      alt="{{ $item->product->title }}"
                                      onerror="this.src='https://placehold.co/120x120/141c2e/64748b?text={{ trans_lang('لا+صورة', 'No+Image') }}'">
                             </div>
@@ -101,8 +97,7 @@
                                 </button>
                             </form>
                         </div>
-                        @endforeach
-                    </div>
+                    @endforeach
                 </div>
             </div>
 
